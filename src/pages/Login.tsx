@@ -27,6 +27,9 @@ const Login = () => {
           </CheckWrapper>
           <Button
             text='Log In'
+            style={{
+              marginTop: '12px',
+            }}
             onClick={() => navigate('/user-profile')}
           ></Button>
         </InputWrapper>
@@ -64,7 +67,7 @@ export const FormContainer = styled.div`
   text-align: left;
   background-color: ${colors.white};
   font-family: 'Poppins Regular';
-  width: 380px;
+  max-width: 380px;
   height: 480px;
 `
 export const Logo = styled.div`
@@ -85,7 +88,6 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: left;
-  /* gap: 14px; */
   font-size: 8px;
 `
 const CheckWrapper = styled.div`
@@ -97,7 +99,7 @@ const CheckWrapper = styled.div`
   font-family: 'Poppins Regular';
   color: ${colors.grey};
   font-size: 11px;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 `
 const CheckBox = styled.div`
   display: flex;
@@ -114,7 +116,6 @@ export const SocialLogin = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: space-between;
-  /* gap: 15px; */
   width: 380px;
   font-family: 'Poppins Regular';
   font-size: 11px;
@@ -140,7 +141,10 @@ export const Dash = styled.div`
 export const IconLogin = styled.div`
   display: flex;
   align-items: center;
-  column-gap: 16px;
+  justify-content: space-between;
+  width: 70px;
+  margin-top: 8px;
+  margin-bottom: 10px;
 `
 export const Figure = styled.div`
   height: 480px;
