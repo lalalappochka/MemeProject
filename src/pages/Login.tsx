@@ -99,7 +99,6 @@ const CheckWrapper = styled.div`
   font-family: 'Poppins Regular';
   color: ${colors.grey};
   font-size: 11px;
-  /* margin-top: 10px; */
 `
 const CheckBox = styled.div`
   display: flex;

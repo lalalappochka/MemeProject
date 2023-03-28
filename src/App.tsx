@@ -2,6 +2,7 @@ import './App.css'
 import Login from './pages/Login'
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom'
 import Registration from './pages/Registration'
+import UserProfile from './pages/UserProfile'
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path='/' element={<Navigate to='/login' replace />} />
         <Route path='/login' element={<Login />} />
         <Route path='/registration' element={<Registration />} />
+        <Route path='user-profile' element={<UserProfile />} />
       </Routes>
     </BrowserRouter>
   )
