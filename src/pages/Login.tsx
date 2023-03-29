@@ -30,7 +30,7 @@ const Login = () => {
             style={{
               marginTop: '12px',
             }}
-            onClick={() => navigate('/user-profile')}
+            onClick={() => navigate('user-profile')}
           ></Button>
         </InputWrapper>
         <SocialLogin>
@@ -55,7 +55,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${colors.theme};
+  background-color: ${colors.cyan};
   height: 100vh;
   width: 100%;
 `

@@ -5,7 +5,7 @@ import colors from '../../../constants/colors'
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
-interface ItemProps {
+export interface ItemProps {
   icon: string
   iconColor: string
   size: number
@@ -35,6 +35,8 @@ const Bar = styled.div`
   align-items: center;
   height: 40px;
   width: 200px;
+  gap: 10px;
+  font-size: 14px;
 `
 const LinkWrapper = styled(Link)`
   text-decoration: none;

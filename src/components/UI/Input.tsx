@@ -1,17 +1,28 @@
-import styled from 'styled-components'
+import styled, { CSSProperties } from 'styled-components'
 import colors from '../../constants/colors'
 import { FC, HTMLAttributes } from 'react'
 
 interface InputProps {
   type?: string
-  placeholder: string
+  placeholder?: string
+  style?: CSSProperties
+  value?: string
 }
 
 const Input: FC<InputProps & HTMLAttributes<HTMLInputElement>> = ({
   type,
   placeholder,
+  style,
+  value,
 }: InputProps) => {
-  return <InfoInput type={type} placeholder={placeholder}></InfoInput>
+  return (
+    <InfoInput
+      type={type}
+      placeholder={placeholder}
+      style={style}
+      value={value}
+    ></InfoInput>
+  )
 }
 
 const InfoInput = styled.input`

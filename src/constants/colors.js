@@ -8,6 +8,10 @@ const colors = {
   grey: '#AEAEAE',
   theme: '#E6D7DB',
   borderIcon: '#FFCCBF',
+  gainsboro: '#f8f9fa',
+  cyan:'#b5e2fa',
+  darkblue: '#d6eaf8',
+  night:'#364156',
 }
 
 export default colors

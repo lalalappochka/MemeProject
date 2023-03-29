@@ -1,5 +1,6 @@
 import { FC, HTMLAttributes } from 'react'
 import styled from 'styled-components'
+import lines from '../../../assets/lines.jpg'
 import colors from '../../../constants/colors'
 
 interface PanelProps {
@@ -26,6 +27,10 @@ const Panel = styled.div`
   height: 200px;
   gap: 5px;
   font-size: 15px;
+  color: ${colors.white};
+  background-image: url(${lines});
+  background-position: center;
+  background-size: 270px 200px;
 `
 const Image = styled.img`
   border-radius: 100px;

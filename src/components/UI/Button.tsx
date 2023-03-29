@@ -7,15 +7,17 @@ interface ButtonProps {
   text?: string
   style?: CSSProperties
   icon?: ReactNode
+  onClick?: () => void
 }
 
 const Button: FC<ButtonProps & HTMLAttributes<HTMLInputElement>> = ({
   text,
   style,
   icon,
+  onClick,
 }) => {
   return (
-    <SimpleButton style={style}>
+    <SimpleButton style={style} onClick={onClick}>
       {text}
       {icon}
     </SimpleButton>
@@ -33,6 +35,7 @@ const SimpleButton = styled.button`
   width: 250px;
   font-family: 'Poppins Regular';
   background-color: ${colors.orange};
+  color: ${colors.night};
 `
 
 export default Button
