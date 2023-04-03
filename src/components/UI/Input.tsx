@@ -21,7 +21,7 @@ const Input: FC<InputProps & HTMLAttributes<HTMLInputElement>> = ({
       placeholder={placeholder}
       style={style}
       value={value}
-    ></InfoInput>
+    />
   )
 }
 
@@ -38,6 +38,6 @@ const InfoInput = styled.input`
   border-color: ${colors.grey};
   font-family: 'Poppins Regular';
   font-size: 10px;
-  margin-bottom: 14px;
+  /* margin-bottom: 14px; */
 `
 export default Input

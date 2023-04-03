@@ -2,7 +2,7 @@ import { FC, HTMLAttributes } from 'react'
 import styled from 'styled-components'
 import colors from '../constants/colors'
 
-interface MemProps {
+export interface MemProps {
   imgUrl: string
   text: string
   memUrl: string

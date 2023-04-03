@@ -30,7 +30,7 @@ const Login = () => {
             style={{
               marginTop: '12px',
             }}
-            onClick={() => navigate('user-profile')}
+            onClick={() => navigate('/user-profile')}
           ></Button>
         </InputWrapper>
         <SocialLogin>
