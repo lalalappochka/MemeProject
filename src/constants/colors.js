@@ -12,6 +12,7 @@ const colors = {
   cyan:'#b5e2fa',
   darkblue: '#d6eaf8',
   night:'#364156',
+  aliceblue:'#f0f8ff'
 }
 
 export default colors

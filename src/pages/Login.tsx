@@ -20,8 +20,8 @@ const Login = () => {
           <Input placeholder='password'></Input>
           <CheckWrapper>
             <CheckBox>
-              <CheckInput id='remember' type='checkbox' className='checkbox' />
-              <Label htmlFor='remember'>Remember me </Label>
+              <input id='remember' type='checkbox' className='checkbox' />
+              <label htmlFor='remember'>Remember me </label>
             </CheckBox>
             <Text>Forgot password</Text>
           </CheckWrapper>
@@ -108,8 +108,6 @@ const CheckBox = styled.div`
   font-family: 'Poppins Regular';
   color: ${colors.grey};
 `
-export const CheckInput = styled.input``
-export const Label = styled.label``
 export const SocialLogin = styled.div`
   display: flex;
   align-items: center;

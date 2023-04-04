@@ -60,10 +60,13 @@ const Sidebar = () => {
 const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 100vh;
   width: 200px;
   font-family: 'Poppins Regular';
   font-size: 12px;
-  color: ${colors.orange};
+  background-color: ${colors.cyan};
 `
 export default Sidebar

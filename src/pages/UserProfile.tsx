@@ -76,6 +76,7 @@ const UserProfile = () => {
           style={{
             fontFamily: 'Poppins Regular',
             marginTop: '20px',
+            fontSize: '20px',
           }}
           text={!isEditing ? 'Изменить' : 'Сохранить'}
           onClick={handleEditProfileClick}

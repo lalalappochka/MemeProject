@@ -8,9 +8,10 @@ import cat from '../assets/catMeme.jpg'
 import memeskiska from '../assets/memes_kiska.png'
 import colors from '../constants/colors'
 import { useMemo } from 'react'
+import { PageWrapper } from './Home'
 
 const MyMemes = () => {
-  const posts: MemProps[] = useMemo(
+  const myPosts: MemProps[] = useMemo(
     () => [
       {
         imgUrl: profile,
@@ -39,7 +40,7 @@ const MyMemes = () => {
     <PageWrapper>
       <Sidebar />
       <MemesList>
-        {posts.map((value, index) => (
+        {myPosts.map((value, index) => (
           <MemPost
             key={'SidebarItem' + index}
             imgUrl={value.imgUrl}
@@ -52,13 +53,6 @@ const MyMemes = () => {
   )
 }
 
-export const PageWrapper = styled.div`
-  display: flex;
-  height: 100%;
-  width: 100%;
-  background-color: ${colors.darkblue};
-`
-
 export const MemesList = styled.div`
   display: flex;
   flex-direction: row;
@@ -66,7 +60,7 @@ export const MemesList = styled.div`
   gap: 20px;
   flex-wrap: wrap;
   width: 1336px;
-  background-color: aliceblue;
+  background-color: ${colors.aliceblue};
   height: 100%;
   padding: 20px 0;
 `
