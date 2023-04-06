@@ -74,13 +74,12 @@ const UserProfile = () => {
         </InfoWrapper>
         <Button
           style={{
-            fontFamily: 'Poppins Regular',
             marginTop: '20px',
-            fontSize: '20px',
+            fontSize: '15px',
           }}
-          text={!isEditing ? 'Изменить' : 'Сохранить'}
+          text={!isEditing ? 'Change' : 'Save'}
           onClick={handleEditProfileClick}
-        ></Button>
+        />
       </Content>
     </Container>
   )

@@ -30,7 +30,8 @@ const Post = styled.div`
   flex-direction: column;
   height: 500px;
   width: 500px;
-  margin-top: 40px;
+  /* margin-top: 10px; */
+  margin-bottom: 4px;
   background-color: ${colors.gainsboro};
   border-radius: 20px;
   box-shadow: 4px 2px 10px ${colors.grey};
