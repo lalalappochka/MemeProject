@@ -1,24 +1,19 @@
 import { FC, HTMLAttributes } from 'react'
 import styled from 'styled-components'
 import colors from '../constants/colors'
+import { IMeme } from '../models/IMeme'
 
-export interface MemProps {
-  imgUrl: string
-  text: string
-  memUrl: string
+interface MemProps {
+  meme: IMeme
 }
-const MemPost: FC<MemProps & HTMLAttributes<HTMLInputElement>> = ({
-  imgUrl,
-  text,
-  memUrl,
-}) => {
+const MemPost: FC<MemProps & HTMLAttributes<HTMLInputElement>> = ({ meme }) => {
   return (
     <Post>
       <Header>
-        <Profile src={imgUrl} />
-        {text}
+        {/* <Profile src={imgUrl} /> */}
+        {meme.name}
       </Header>
-      <Mem src={memUrl} />
+      <Mem src={meme.url} />
     </Post>
   )
 }

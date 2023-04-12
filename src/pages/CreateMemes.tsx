@@ -1,14 +1,20 @@
 import styled from 'styled-components'
 import Sidebar from '../components/UI/sidebar/Sidebar'
 import colors from '../constants/colors'
-import pic from '../assets/profOriental.jpg'
 import Button from '../components/UI/Button'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { PageWrapper } from './Home'
 import { Position } from '../models/enums/Position'
 import { IColor } from '../models/IColor'
+import { useGetMemesQuery } from '../store/services/meme.api'
+import { IMeme } from '../models/IMeme'
+import DraggableDiv from '../components/DraggableDiv'
+
+const MAX_CANVAS_WIDTH = 500
+const MAX_CANVAS_HEIGHT = 500
 
 const CreateMemes = () => {
+  const { data } = useGetMemesQuery()
   const spacingWidths: number[] = useMemo(
     () => [10, 15, 20, 25, 35, 45, 50],
     []
@@ -20,32 +26,80 @@ const CreateMemes = () => {
     ],
     []
   )
+  const [currentPic, setCurrentPic] = useState<IMeme>()
+  const memeTemplates: IMeme[] | undefined = useMemo(() => {
+    if (data) {
+      setCurrentPic(data[0])
+    }
+    return data
+  }, [data])
   const [spacingPosition, setSpacingPosition] = useState(Position.Top)
+  const [isDraggableShown, setIsDraggableShown] = useState(false)
   const [spacingColor, setSpacingColor] = useState(spacingColors[0].value)
   const [showSpacing, setShowSpacing] = useState(false)
   const [rotation, setRotation] = useState(0)
   const [spacing, setSpacing] = useState(spacingWidths[0] / 100)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [currentPic, setCurrentPic] = useState(pic)
+  const canvasWrapperRef = useRef<HTMLDivElement>(null)
+  const drawCanvasRef = useRef<HTMLCanvasElement>(
+    document.createElement('canvas')
+  )
+  const drawCanvasImageRef = useRef<HTMLImageElement>(new Image())
+  const [isPainting, setIsPainting] = useState(false)
+  const [paintingStroke, setPaintingStroke] = useState('#000')
+  const [paintingWidth, setPaintingWidth] = useState(5)
 
   useEffect(() => {
+    handleCanvasAction(fillCanvas)
+  }, [showSpacing, spacing, spacingPosition, spacingColor, currentPic])
+
+  useEffect(() => {
+    handleCanvasAction(drawCanvas)
+  }, [isPainting, paintingStroke, paintingWidth])
+
+  const handleCanvasAction = (
+    action: (
+      canvas: HTMLCanvasElement,
+      ctx: CanvasRenderingContext2D,
+      drawCanvas: HTMLCanvasElement,
+      drawCtx: CanvasRenderingContext2D
+    ) => void
+  ) => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
+    const drawCanvas = drawCanvasRef.current
+    const drawCtx = drawCanvas.getContext('2d')!
 
-    fillCanvas(canvas!, ctx!)
-  }, [showSpacing, spacing, spacingPosition, spacingColor])
+    action(canvas!, ctx!, drawCanvas, drawCtx)
+  }
 
   const fillCanvas = (
     canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
+    ctx: CanvasRenderingContext2D,
+    drawCanvas: HTMLCanvasElement,
+    drawCtx: CanvasRenderingContext2D
   ) => {
-    const img = new Image()
+    if (!currentPic) {
+      return
+    }
 
-    img.src = currentPic
+    const img = new Image(currentPic.width, currentPic.height)
+
+    if (currentPic.width > MAX_CANVAS_WIDTH) {
+      img.width = MAX_CANVAS_WIDTH
+    }
+
+    if (currentPic.height > MAX_CANVAS_HEIGHT) {
+      img.height = MAX_CANVAS_HEIGHT
+    }
+
+    img.src = currentPic.url
 
     img.onload = () => {
       canvas.width = img.width
       canvas.height = img.height
+      drawCanvas.width = canvas.width
+      drawCanvas.height = canvas.height
 
       let blockHeight
 
@@ -93,16 +147,98 @@ const CreateMemes = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
       }
+      if (drawCanvasImageRef.current.src) {
+        ctx.drawImage(
+          drawCanvasImageRef.current,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        )
+        drawCtx.drawImage(
+          drawCanvasImageRef.current,
+          0,
+          0,
+          drawCanvas.width,
+          drawCanvas.height
+        )
+      }
+      canvasWrapperRef.current!.style.width = `${canvas.width}px`
+      canvasWrapperRef.current!.style.height = `${canvas.height}px`
     }
   }
 
-  // let isPainting = false
-  // let lineWidth = 5
-  // let startX
-  // let startY
-  // const drawCanvas = () => {
-  //   isPainting = true
-  // }
+  const drawCanvas = (
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    drawCanvas: HTMLCanvasElement,
+    drawCtx: CanvasRenderingContext2D
+  ) => {
+    let lastX = 0
+    let lastY = 0
+    let isDrawing = false
+
+    const handleMouseDown = (e: MouseEvent) => {
+      isDrawing = true
+      lastX = e.offsetX
+      lastY = e.offsetY
+    }
+
+    const draw = (ctx: CanvasRenderingContext2D, e: MouseEvent) => {
+      ctx.beginPath()
+      ctx.moveTo(lastX, lastY)
+      ctx.lineCap = 'round'
+      ctx.lineTo(e.offsetX, e.offsetY)
+      ctx.strokeStyle = paintingStroke
+      ctx.lineWidth = paintingWidth
+      ctx.stroke()
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDrawing) return
+
+      draw(ctx, e)
+
+      draw(drawCtx, e)
+
+      lastX = e.offsetX
+      lastY = e.offsetY
+    }
+
+    const handleMouseUpOut = () => {
+      isDrawing = false
+      drawCanvasImageRef.current.src = drawCanvas.toDataURL()
+    }
+
+    if (isPainting) {
+      canvas.onmousedown = handleMouseDown
+      canvas.onmousemove = handleMouseMove
+      canvas.onmouseup = handleMouseUpOut
+      canvas.onmouseout = handleMouseUpOut
+    } else {
+      canvas.onmousedown = null
+      canvas.onmousemove = null
+      canvas.onmouseup = null
+      canvas.onmouseout = null
+    }
+  }
+
+  const clearDrawing = () => {
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+
+    const drawCanvas = drawCanvasRef.current
+    const drawCanvasCtx = drawCanvas.getContext('2d')!
+
+    drawCanvasCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height)
+    drawCanvasImageRef.current.src = ''
+
+    fillCanvas(canvas!, ctx!, drawCanvas, drawCanvasCtx)
+  }
+
+  const handleAddTextInput = () => {
+    console.log('')
+  }
 
   return (
     <PageWrapper>
@@ -128,25 +264,27 @@ const CreateMemes = () => {
             }}
           ></Button>
           <Button
-            text='Add Image'
-            // onClick={}
-            style={{
-              width: '70px',
-              fontSize: '10px',
-              borderRadius: '10px',
-            }}
-          ></Button>
-          <Button
-            text='Draw'
-            // onClick={}
+            text={isPainting ? 'Done' : 'Draw'}
+            onClick={() => setIsPainting((prev) => !prev)}
             style={{
               width: '50px',
               fontSize: '10px',
               borderRadius: '10px',
             }}
           ></Button>
+          <Button
+            text='Add text input'
+            onClick={handleAddTextInput}
+            style={{
+              width: '100px',
+              fontSize: '10px',
+              borderRadius: '10px',
+            }}
+          ></Button>
         </Header>
-        <SpacingSelections>
+        <SpacingSelections
+          style={{ visibility: showSpacing ? 'visible' : 'collapse' }}
+        >
           <PositionSelection
             onChange={(e) => setSpacingPosition(parseInt(e.target.value))}
           >
@@ -171,22 +309,47 @@ const CreateMemes = () => {
               >{`${value.toString()}%`}</option>
             ))}
           </SizeSelection>
-          <input id='stroke' name='stroke' type='color' />
-          <input id='linewidth' name='linewidth' type='number' value='5' />
+        </SpacingSelections>
+        <DrawTools style={{ visibility: isPainting ? 'visible' : 'collapse' }}>
+          <input
+            id='stroke'
+            name='stroke'
+            value={paintingStroke}
+            type='color'
+            onChange={(e) => setPaintingStroke(e.target.value)}
+          />
+          <input
+            id='linewidth'
+            name='linewidth'
+            type='range'
+            value={paintingWidth}
+            min={1}
+            max={32}
+            onChange={(e) => setPaintingWidth(parseInt(e.target.value))}
+          />
           <Button
             id='clear'
-            // onClick={() =>}
+            onClick={clearDrawing}
             text='Clear'
             style={{
               width: '50px',
             }}
           ></Button>
-        </SpacingSelections>
-        {/* <Spacing ref={divRef} /> */}
-        <MemCanvas
-          ref={canvasRef}
-          style={{ transform: `rotate(${rotation}deg)` }}
-        ></MemCanvas>
+        </DrawTools>
+        <MemCanvasWrapper
+          ref={canvasWrapperRef}
+          onMouseOver={() => setIsDraggableShown(true)}
+          onMouseOut={() => setIsDraggableShown(false)}
+        >
+          <MemCanvas
+            ref={canvasRef}
+            style={{ transform: `rotate(${rotation}deg)` }}
+          ></MemCanvas>
+          <DraggableDiv
+            display={isDraggableShown ? 'block' : 'none'}
+            parentRef={canvasWrapperRef}
+          />
+        </MemCanvasWrapper>
       </AddPanel>
     </PageWrapper>
   )
@@ -194,7 +357,6 @@ const CreateMemes = () => {
 
 const AddPanel = styled.div`
   display: flex;
-  justify-content: center;
   flex-direction: column;
   height: 731px;
   width: 1336px;
@@ -205,8 +367,10 @@ const Header = styled.div`
   justify-content: space-between;
   flex-direction: row;
   width: 300px;
-  height: 50px;
+  height: 40px;
   margin-left: 100px;
+  margin-top: 100px;
+  margin-bottom: 20px;
 `
 
 const MemCanvas = styled.canvas`
@@ -218,6 +382,7 @@ const SpacingSelections = styled.div`
   justify-content: space-between;
   flex-direction: row;
   width: 250px;
+  /* visibility: collapse; */
 `
 const PositionSelection = styled.select`
   display: block;
@@ -242,6 +407,15 @@ const SizeSelection = styled.select`
   option {
     font-family: sans-serif;
   }
+`
+const DrawTools = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+const MemCanvasWrapper = styled.div`
+  display: flex;
+  position: relative;
+  margin: 0 auto;
 `
 
 export default CreateMemes

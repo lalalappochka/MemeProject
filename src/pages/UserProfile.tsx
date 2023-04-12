@@ -7,7 +7,24 @@ import { Container } from './Login'
 import profile from '../assets/profile.jpg'
 import Button from '../components/UI/Button'
 
+interface IUserInfo {
+  firstName: string
+  lastName: string
+  nickName: string
+  mobile: string
+  birthday: string
+  email: string
+}
+
 const UserProfile = () => {
+  const [userInfo, setUserInfo] = useState<IUserInfo>({
+    firstName: 'Sasha1',
+    lastName: 'lapo',
+    nickName: 'Lalalappochka',
+    mobile: '+375(44)7831120',
+    birthday: '25/06/2001',
+    email: 'snadvd',
+  })
   const [isEditing, setIsEditing] = useState(false)
 
   const handleEditProfileClick = () => {
@@ -16,6 +33,13 @@ const UserProfile = () => {
     }
 
     setIsEditing((prev) => !prev)
+  }
+
+  const onChange = (e: any) => {
+    setUserInfo((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
   }
   return (
     <Container>
@@ -28,7 +52,12 @@ const UserProfile = () => {
             {!isEditing ? (
               <p>Sasha</p>
             ) : (
-              <Input type='text' value='Sasha' id='firstName' />
+              <Input
+                type='text'
+                value={userInfo.firstName}
+                onChange={(e) => onChange(e)}
+                id='firstName'
+              />
             )}
           </UserInfo>
           <UserInfo>
@@ -36,7 +65,12 @@ const UserProfile = () => {
             {!isEditing ? (
               <p>Lapo</p>
             ) : (
-              <Input type='text' value='Lapo' id='lastName' />
+              <Input
+                type='text'
+                value={userInfo.lastName}
+                onChange={(e) => onChange(e)}
+                id='lastName'
+              />
             )}
           </UserInfo>
           <UserInfo>

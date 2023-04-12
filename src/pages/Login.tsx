@@ -6,10 +6,21 @@ import logo from '../assets/logo.png'
 import figure from '../assets/figure.jpg'
 import { Link, useNavigate } from 'react-router-dom'
 import Icon from '../components/UI/Icon'
+// import { useDispatch } from 'react-redux'
+// import { setUser } from '../store/slices/userSlice'
+// import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 require('checkboxes')
 
 const Login = () => {
   const navigate = useNavigate()
+  // const dispatch = useDispatch()
+  // const handleLogin = (email, password) => {
+  //   const auth = getAuth()
+  //   signInWithEmailAndPassword(auth, email, password)
+  //     .then(console.log)
+  //     .catch(console.error)
+  // }
+
   return (
     <Container>
       <FormContainer>

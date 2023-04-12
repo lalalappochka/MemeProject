@@ -1,4 +1,4 @@
-import MemPost, { MemProps } from '../components/MemPost'
+import MemPost from '../components/MemPost'
 import Sidebar from '../components/UI/sidebar/Sidebar'
 import profile from '../assets/profile.jpg'
 import prof from '../assets/profOriental.jpg'
@@ -11,43 +11,43 @@ import { useMemo } from 'react'
 import { PageWrapper } from './Home'
 
 const MyMemes = () => {
-  const myPosts: MemProps[] = useMemo(
-    () => [
-      {
-        imgUrl: profile,
-        text: 'Lalalappochka',
-        memUrl: mem,
-      },
-      {
-        imgUrl: prof,
-        text: 'Lalalappochka',
-        memUrl: prof,
-      },
-      {
-        imgUrl: prof,
-        text: 'Lalalappochka',
-        memUrl: cat,
-      },
-      {
-        imgUrl: prof,
-        text: 'Lalalappochka',
-        memUrl: memeskiska,
-      },
-    ],
-    []
-  )
+  // const myPosts: MemProps[] = useMemo(
+  //   () => [
+  //     {
+  //       imgUrl: profile,
+  //       text: 'Lalalappochka',
+  //       memUrl: mem,
+  //     },
+  //     {
+  //       imgUrl: prof,
+  //       text: 'Lalalappochka',
+  //       memUrl: prof,
+  //     },
+  //     {
+  //       imgUrl: prof,
+  //       text: 'Lalalappochka',
+  //       memUrl: cat,
+  //     },
+  //     {
+  //       imgUrl: prof,
+  //       text: 'Lalalappochka',
+  //       memUrl: memeskiska,
+  //     },
+  //   ],
+  //   []
+  // )
   return (
     <PageWrapper>
       <Sidebar />
       <MemesList>
-        {myPosts.map((value, index) => (
+        {/* {myPosts.map((value, index) => (
           <MemPost
             key={'SidebarItem' + index}
             imgUrl={value.imgUrl}
             text={value.text}
             memUrl={value.memUrl}
           />
-        ))}
+        ))} */}
       </MemesList>
     </PageWrapper>
   )

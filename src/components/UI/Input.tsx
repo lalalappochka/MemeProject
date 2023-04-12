@@ -14,6 +14,7 @@ const Input: FC<InputProps & HTMLAttributes<HTMLInputElement>> = ({
   placeholder,
   style,
   value,
+  ...props
 }: InputProps) => {
   return (
     <InfoInput
@@ -21,6 +22,7 @@ const Input: FC<InputProps & HTMLAttributes<HTMLInputElement>> = ({
       placeholder={placeholder}
       style={style}
       value={value}
+      {...props}
     />
   )
 }
