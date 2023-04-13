@@ -38,7 +38,7 @@ const Login = () => {
     <Container>
       <FormContainer>
         <Logo />
-        <Title>Log In</Title>
+        <Title style={{ marginLeft: '68px' }}>Log In</Title>
         <InputWrapper>
           <Input
             placeholder='email'
@@ -112,7 +112,6 @@ export const Logo = styled.div`
 export const Title = styled.h2`
   display: flex;
   align-self: flex-start;
-  margin-left: 68px;
   font-family: 'Poppins Medium';
 `
 export const InputWrapper = styled.div`

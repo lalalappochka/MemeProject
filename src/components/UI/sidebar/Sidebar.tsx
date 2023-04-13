@@ -5,6 +5,10 @@ import { ItemProps } from './SideBarItem'
 import SidebarItem from './SideBarItem'
 import UserPanel from './UserPanel'
 import profile from '../../../assets/profile.jpg'
+import Icon from '../Icon'
+import { useAppDispatch } from '../../../hooks/redux-hooks'
+import { removeUser } from '../../../store/slices/userSlice'
+import { useNavigate } from 'react-router-dom'
 
 const Sidebar = () => {
   const items: ItemProps[] = useMemo(
@@ -40,6 +44,12 @@ const Sidebar = () => {
     ],
     []
   )
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const handleSignOut = () => {
+    dispatch(removeUser())
+    navigate('/login')
+  }
   return (
     <SidebarContainer>
       <UserPanel text='Lalalappochka' profileUrl={profile} />
@@ -53,6 +63,13 @@ const Sidebar = () => {
           route={value.route}
         />
       ))}
+      <Icon
+        icon='sign-out'
+        color={colors.night}
+        size={24}
+        style={{ marginTop: '340px', marginLeft: '10px' }}
+        onClick={handleSignOut}
+      />
     </SidebarContainer>
   )
 }
@@ -68,5 +85,6 @@ const SidebarContainer = styled.div`
   font-family: 'Poppins Regular';
   font-size: 12px;
   background-color: ${colors.cyan};
+  box-shadow: 1px 0 5px 0 rgba(18, 3, 54, 0.2);
 `
 export default Sidebar

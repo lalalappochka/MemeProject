@@ -483,17 +483,36 @@ const CreateMemes = () => {
                     handleInputChange(index, e.target.value)
                   }
                 />
-                <button
+                <Button
                   key={`meme-button-${index}`}
                   onClick={() => handleRemoveInput(index)}
-                >
-                  Удалить
-                </button>
+                  text={'Remove'}
+                  style={{
+                    width: '70px',
+                    marginLeft: '10px',
+                    marginBottom: '20px',
+                  }}
+                ></Button>
               </div>
             ))}
           </InputsWrapper>
         </MemEditingBlock>
-        <p onClick={() => handleCanvasAction(handleCreateMem)}>Создать мэм</p>
+        <Button
+          text={'Create mem'}
+          onClick={() => handleCanvasAction(handleCreateMem)}
+          style={{
+            backgroundColor: `${colors.blue}`,
+            width: '100px',
+            marginLeft: '90px',
+            marginTop: '10px',
+          }}
+        />
+        {/* <p
+          onClick={() => handleCanvasAction(handleCreateMem)}
+          style={{ marginLeft: '95px' }}
+        >
+          Create meme
+        </p> */}
         {/* {convertedImageRef.current.src && (
           <a href={convertedImageRef.current.src} download='image.jpg'>
             Скачать
@@ -509,6 +528,7 @@ const MemEditingBlock = styled.div`
   flex-direction: row;
   width: 100%;
   justify-content: center;
+  font-family: 'Poppins Regular';
 `
 
 const InputsWrapper = styled.div`
@@ -519,9 +539,9 @@ const InputsWrapper = styled.div`
 const AddPanel = styled.div`
   display: flex;
   flex-direction: column;
-  height: 731px;
+  height: 100%;
   width: 1336px;
-  background-color: ${colors.aliceblue};
+  background-color: ${colors.blue};
 `
 const Header = styled.div`
   display: flex;
@@ -577,7 +597,6 @@ const MemCanvasWrapper = styled.div`
   display: flex;
   position: relative;
   margin: 0 auto;
-  background-color: ${colors.gainsboro};
 `
 
 export default CreateMemes

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Input from '../components/UI/Input'
 import Sidebar from '../components/UI/sidebar/Sidebar'
 import colors from '../constants/colors'
-import { Container } from './Login'
+import { Container, Title } from './Login'
 import profile from '../assets/profile.jpg'
 import Button from '../components/UI/Button'
 import { setUser } from '../store/slices/userSlice'
@@ -59,6 +59,18 @@ const UserProfile = () => {
       <Sidebar />
       <Content>
         <Profile src={profile} />
+        <BioWrapper>
+          <Title style={{ fontSize: '17px' }}>BioGraph</Title>
+          <Button
+            style={{
+              marginTop: '20px',
+              fontSize: '15px',
+              marginLeft: '20px',
+            }}
+            text={!isEditing ? 'Change' : 'Save'}
+            onClick={handleEditProfileClick}
+          />
+        </BioWrapper>
         <InfoWrapper>
           <UserInfo>
             <Label htmlFor='firstName'>First name: </Label>
@@ -139,14 +151,6 @@ const UserProfile = () => {
             )}
           </UserInfo>
         </InfoWrapper>
-        <Button
-          style={{
-            marginTop: '20px',
-            fontSize: '15px',
-          }}
-          text={!isEditing ? 'Change' : 'Save'}
-          onClick={handleEditProfileClick}
-        />
       </Content>
     </Container>
   )
@@ -158,11 +162,9 @@ export const Content = styled.div`
   align-items: center;
   height: 731px;
   width: 1336px;
-  background-color: ${colors.borderIcon};
   font-family: 'Poppins Regular';
-  .simple-linear {
-    background: linear-gradient(blue, pink);
-  }
+  /* background: linear-gradient(${colors.cyan}, ${colors.blue}); */
+  background-color: ${colors.aliceblue};
 `
 const Profile = styled.img`
   border-radius: 100px;
@@ -190,6 +192,16 @@ const InfoWrapper = styled.div`
   background-color: ${colors.blue};
   flex-wrap: wrap;
   border-radius: 20px;
+  box-shadow: 0 0 10px ${colors.night};
+`
+const BioWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 35px;
+  width: 750px;
+  margin-bottom: 20px;
 `
 
 export default UserProfile
