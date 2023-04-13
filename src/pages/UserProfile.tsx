@@ -6,6 +6,7 @@ import colors from '../constants/colors'
 import { Container } from './Login'
 import profile from '../assets/profile.jpg'
 import Button from '../components/UI/Button'
+import { setUser } from '../store/slices/userSlice'
 
 interface IUserInfo {
   firstName: string
@@ -27,6 +28,24 @@ const UserProfile = () => {
   })
   const [isEditing, setIsEditing] = useState(false)
 
+  const handleChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({ ...prev, firstName: e.target.value }))
+  }
+  const handleChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({ ...prev, lastName: e.target.value }))
+  }
+  const handleChangeNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({ ...prev, nickName: e.target.value }))
+  }
+  const handleChangeMobile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({ ...prev, mobile: e.target.value }))
+  }
+  const handleChangeBirthday = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({ ...prev, birthday: e.target.value }))
+  }
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({ ...prev, email: e.target.value }))
+  }
   const handleEditProfileClick = () => {
     if (isEditing) {
       // запрос
@@ -35,12 +54,6 @@ const UserProfile = () => {
     setIsEditing((prev) => !prev)
   }
 
-  const onChange = (e: any) => {
-    setUserInfo((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }))
-  }
   return (
     <Container>
       <Sidebar />
@@ -50,12 +63,12 @@ const UserProfile = () => {
           <UserInfo>
             <Label htmlFor='firstName'>First name: </Label>
             {!isEditing ? (
-              <p>Sasha</p>
+              <p>{userInfo.firstName}</p>
             ) : (
               <Input
                 type='text'
                 value={userInfo.firstName}
-                onChange={(e) => onChange(e)}
+                onInputChange={handleChangeFirstName}
                 id='firstName'
               />
             )}
@@ -63,12 +76,12 @@ const UserProfile = () => {
           <UserInfo>
             <Label htmlFor='lastName'>Last name: </Label>
             {!isEditing ? (
-              <p>Lapo</p>
+              <p>{userInfo.lastName}</p>
             ) : (
               <Input
                 type='text'
                 value={userInfo.lastName}
-                onChange={(e) => onChange(e)}
+                onInputChange={handleChangeLastName}
                 id='lastName'
               />
             )}
@@ -76,33 +89,53 @@ const UserProfile = () => {
           <UserInfo>
             <Label htmlFor='nickName'>Nickname: </Label>
             {!isEditing ? (
-              <p>Lalalappochka</p>
+              <p>{userInfo.nickName}</p>
             ) : (
-              <Input type='text' value='Lalalappochka' id='lastName' />
+              <Input
+                type='text'
+                value={userInfo.nickName}
+                onInputChange={handleChangeNickName}
+                id='lastName'
+              />
             )}
           </UserInfo>
           <UserInfo>
             <Label htmlFor='mobile'>Mobile: </Label>
             {!isEditing ? (
-              <p>+375(44)7831120</p>
+              <p>{userInfo.mobile}</p>
             ) : (
-              <Input type='text' value='+375(44)7831120' id='mobile' />
+              <Input
+                type='text'
+                value={userInfo.mobile}
+                onInputChange={handleChangeMobile}
+                id='mobile'
+              />
             )}
           </UserInfo>
           <UserInfo>
             <Label htmlFor='birth'>Birthday: </Label>
             {!isEditing ? (
-              <p>25 June</p>
+              <p>{userInfo.birthday}</p>
             ) : (
-              <Input type='text' value='25 June' id='birth' />
+              <Input
+                type='text'
+                value='25 June'
+                onInputChange={handleChangeBirthday}
+                id='birth'
+              />
             )}
           </UserInfo>
           <UserInfo>
             <Label htmlFor='email'>Email: </Label>
             {!isEditing ? (
-              <p>sanyalappo16@gmail.com</p>
+              <p>{userInfo.email}</p>
             ) : (
-              <Input type='text' value='sanyalappo16@gmail.com' id='birth' />
+              <Input
+                type='text'
+                value={userInfo.email}
+                onInputChange={handleChangeEmail}
+                id='birth'
+              />
             )}
           </UserInfo>
         </InfoWrapper>
@@ -125,8 +158,11 @@ export const Content = styled.div`
   align-items: center;
   height: 731px;
   width: 1336px;
-  background-color: ${colors.white};
+  background-color: ${colors.borderIcon};
   font-family: 'Poppins Regular';
+  .simple-linear {
+    background: linear-gradient(blue, pink);
+  }
 `
 const Profile = styled.img`
   border-radius: 100px;

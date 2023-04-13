@@ -6,7 +6,6 @@ import UserProfile from './pages/UserProfile'
 import MyMemes from './pages/MyMemes'
 import CreateMemes from './pages/CreateMemes'
 import Home from './pages/Home'
-import Sidebar from './components/UI/sidebar/Sidebar'
 import UserList from './components/UserList'
 
 function App() {

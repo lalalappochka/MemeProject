@@ -6,20 +6,33 @@ import logo from '../assets/logo.png'
 import figure from '../assets/figure.jpg'
 import { Link, useNavigate } from 'react-router-dom'
 import Icon from '../components/UI/Icon'
-// import { useDispatch } from 'react-redux'
-// import { setUser } from '../store/slices/userSlice'
-// import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { setUser } from '../store/slices/userSlice'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { ChangeEvent, useState } from 'react'
+import { useAppDispatch } from '../hooks/redux-hooks'
 require('checkboxes')
 
 const Login = () => {
+  const dispatch = useAppDispatch()
+  const [email, setEmail] = useState('')
+  const [pass, setPass] = useState('')
   const navigate = useNavigate()
-  // const dispatch = useDispatch()
-  // const handleLogin = (email, password) => {
-  //   const auth = getAuth()
-  //   signInWithEmailAndPassword(auth, email, password)
-  //     .then(console.log)
-  //     .catch(console.error)
-  // }
+
+  const handleLogin = (email: string, password: string) => {
+    const auth = getAuth()
+    signInWithEmailAndPassword(auth, email, password)
+      .then(({ user }) => {
+        console.log(user)
+        dispatch(
+          setUser({
+            email: user.email,
+            id: user.uid,
+          })
+        )
+        navigate('/home')
+      })
+      .catch(console.error)
+  }
 
   return (
     <Container>
@@ -27,8 +40,16 @@ const Login = () => {
         <Logo />
         <Title>Log In</Title>
         <InputWrapper>
-          <Input placeholder='email'></Input>
-          <Input placeholder='password'></Input>
+          <Input
+            placeholder='email'
+            value={email}
+            onInputChange={(e) => setEmail(e.target.value)}
+          ></Input>
+          <Input
+            placeholder='password'
+            value={pass}
+            onInputChange={(e) => setPass(e.target.value)}
+          ></Input>
           <CheckWrapper>
             <CheckBox>
               <input id='remember' type='checkbox' className='checkbox' />
@@ -41,7 +62,7 @@ const Login = () => {
             style={{
               marginTop: '12px',
             }}
-            onClick={() => navigate('/user-profile')}
+            onClick={() => handleLogin(email, pass)}
           ></Button>
         </InputWrapper>
         <SocialLogin>

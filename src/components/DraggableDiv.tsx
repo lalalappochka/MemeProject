@@ -1,22 +1,42 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import colors from '../constants/colors'
+import { Pos, Size } from '../pages/CreateMemes'
 
 interface DraggableDivProps {
-  display: string
+  isShown: boolean
   parentRef: React.RefObject<HTMLDivElement>
+  text?: string
+  position: Pos
+  setPosition: (position: Pos, index: number) => void
+  size: Size
+  setDivSize: (size: Size, index: number) => void
+  setTextSize: (size: Size, index: number) => void
+  index: number
 }
 
-interface Position {
-  x: number
-  y: number
-}
+export const START_DIV_WIDTH = 250
+export const START_DIV_HEIGHT = 100
 
-const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
+const DraggableDiv = ({
+  isShown,
+  parentRef,
+  text,
+  position,
+  setPosition,
+  index,
+  size,
+  setDivSize,
+  setTextSize,
+}: DraggableDivProps) => {
   const divRef = useRef<HTMLDivElement>(null)
-  const [position, setPosition] = useState<Position>({ x: 0, y: 0 })
+  const pRef = useRef<HTMLParagraphElement>(null)
+  const resizeNRef = useRef<HTMLDivElement>(null)
+  const resizeERef = useRef<HTMLDivElement>(null)
+  const resizeWRef = useRef<HTMLDivElement>(null)
+  const resizeSRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 })
+  const [dragOffset, setDragOffset] = useState<Pos>({ x: 0, y: 0 })
 
   useEffect(() => {
     function handleWindowResize() {
@@ -25,10 +45,13 @@ const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
       if (parentRect && divRect) {
         const maxX = parentRect.width - divRect.width
         const maxY = parentRect.height - divRect.height
-        setPosition({
-          x: Math.min(Math.max(position.x, 0), maxX),
-          y: Math.min(Math.max(position.y, 0), maxY),
-        })
+        setPosition(
+          {
+            x: Math.min(Math.max(position.x, 0), maxX),
+            y: Math.min(Math.max(position.y, 0), maxY),
+          },
+          index
+        )
       }
     }
     window.addEventListener('resize', handleWindowResize)
@@ -60,16 +83,19 @@ const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
       if (parentRect && divRect) {
         const maxX = parentRect.width - divRect.width
         const maxY = parentRect.height - divRect.height
-        setPosition({
-          x: Math.min(
-            Math.max(event.clientX - parentRect.left - dragOffset.x, 0),
-            maxX
-          ),
-          y: Math.min(
-            Math.max(event.clientY - parentRect.top - dragOffset.y, 0),
-            maxY
-          ),
-        })
+        setPosition(
+          {
+            x: Math.min(
+              Math.max(event.clientX - parentRect.left - dragOffset.x, 0),
+              maxX
+            ),
+            y: Math.min(
+              Math.max(event.clientY - parentRect.top - dragOffset.y, 0),
+              maxY
+            ),
+          },
+          index
+        )
       }
     }
   }
@@ -100,7 +126,9 @@ const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
         width = width - dx
         draggable.style.width = `${width}px`
       }
+      setDivSize({ ...size, width: width }, index)
       document.removeEventListener('mousemove', handleEResizeMove)
+      document.removeEventListener('mouseup', handleEResizeUp)
     }
 
     function handleEResizeMove(event: MouseEvent) {
@@ -126,7 +154,9 @@ const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
         draggable.style.left = `${leftOffset}px`
         draggable.style.width = `${width}px`
       }
+      setDivSize({ ...size, width: width }, index)
       document.removeEventListener('mousemove', handleWResizeMove)
+      document.removeEventListener('mouseup', handleWResizeUp)
     }
 
     function handleWResizeMove(event: MouseEvent) {
@@ -153,7 +183,9 @@ const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
         height = height - dy
         draggable.style.height = `${height}px`
       }
+      setDivSize({ ...size, height: height }, index)
       document.removeEventListener('mousemove', handleSResizeMove)
+      document.removeEventListener('mouseup', handleSResizeUp)
     }
 
     function handleSResizeMove(event: MouseEvent) {
@@ -178,7 +210,9 @@ const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
         draggable.style.top = `${topOffset}px`
         draggable.style.height = `${height}px`
       }
+      setDivSize({ ...size, height: height }, index)
       document.removeEventListener('mousemove', handleNResizeMove)
+      document.removeEventListener('mouseup', handleNResizeUp)
     }
 
     function handleNResizeMove(event: MouseEvent) {
@@ -191,49 +225,81 @@ const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
     }
 
     //APPLYING
-    const resizeE = document.getElementById('resizeE')
-    resizeE?.addEventListener('mousedown', handleEResizeDown)
-    const resizeW = document.getElementById('resizeW')
-    resizeW?.addEventListener('mousedown', handleWResizeDown)
-    const resizeS = document.getElementById('resizeS')
-    resizeS?.addEventListener('mousedown', handleSResizeDown)
-    const resizeN = document.getElementById('resizeN')
-    resizeN?.addEventListener('mousedown', handleNResizeDown)
+    resizeERef.current?.addEventListener('mousedown', handleEResizeDown)
+    resizeWRef.current?.addEventListener('mousedown', handleWResizeDown)
+    resizeSRef.current?.addEventListener('mousedown', handleSResizeDown)
+    resizeNRef.current?.addEventListener('mousedown', handleNResizeDown)
 
     return () => {
-      resizeE?.removeEventListener('mousedown', handleEResizeDown)
-      resizeW?.removeEventListener('mousedown', handleWResizeDown)
-      resizeS?.removeEventListener('mousedown', handleSResizeDown)
-      resizeN?.removeEventListener('mousedown', handleNResizeDown)
+      resizeERef.current?.removeEventListener('mousedown', handleEResizeDown)
+      resizeWRef.current?.removeEventListener('mousedown', handleWResizeDown)
+      resizeSRef.current?.removeEventListener('mousedown', handleSResizeDown)
+      resizeNRef.current?.removeEventListener('mousedown', handleNResizeDown)
     }
   }, [position])
+
+  useEffect(() => {
+    if (!pRef) {
+      return
+    }
+    const paragraphStyle = pRef.current!
+
+    setTextSize(
+      {
+        width: paragraphStyle.clientWidth,
+        height: paragraphStyle.clientHeight,
+      },
+      index
+    )
+  }, [text])
 
   return (
     <Draggable
       ref={divRef}
       style={{
-        display: `${display}`,
         left: position.x,
         top: position.y,
-        height: '100px',
-        width: '250px',
+        height: `${START_DIV_HEIGHT}px`,
+        width: `${START_DIV_WIDTH}px`,
+        border: isShown ? `2px dashed ${colors.night}` : 'none',
       }}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
     >
-      afhfahfa
+      <p
+        ref={pRef}
+        style={{
+          fontFamily: 'Arial',
+          fontSize: '22px',
+          fontWeight: 'bold',
+        }}
+      >
+        {text}
+      </p>
       <WrapN>
-        <ResizeN id='resizeN' />
+        <ResizeN
+          ref={resizeNRef}
+          style={{ display: isShown ? 'block' : 'none' }}
+        />
       </WrapN>
       <WrapE>
-        <ResizeE id='resizeE' />
+        <ResizeE
+          ref={resizeERef}
+          style={{ display: isShown ? 'block' : 'none' }}
+        />
       </WrapE>
       <WrapS>
-        <ResizeS id='resizeS' />
+        <ResizeS
+          ref={resizeSRef}
+          style={{ display: isShown ? 'block' : 'none' }}
+        />
       </WrapS>
       <WrapW>
-        <ResizeW id='resizeW' />
+        <ResizeW
+          ref={resizeWRef}
+          style={{ display: isShown ? 'block' : 'none' }}
+        />
       </WrapW>
       {/* <ResizeNW />
       <ResizeNE />
@@ -244,15 +310,17 @@ const DraggableDiv = ({ display, parentRef }: DraggableDivProps) => {
 }
 
 const Draggable = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
   z-index: 3;
   position: absolute;
-  border: 2px dashed ${colors.night};
   background: transparent;
   cursor: move;
   min-width: 20px;
   min-height: 20px;
-  text-align: center;
+  user-select: none;
 `
 
 const WrapN = styled.div`

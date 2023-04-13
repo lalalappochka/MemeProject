@@ -1,23 +1,30 @@
-import { FC, HTMLAttributes, CSSProperties, ReactNode } from 'react'
+import {
+  FC,
+  HTMLAttributes,
+  CSSProperties,
+  ReactNode,
+  ButtonHTMLAttributes,
+} from 'react'
 import styled from 'styled-components'
 import colors from '../../constants/colors'
 import Icon, { IconProps } from './Icon'
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string
   style?: CSSProperties
   icon?: ReactNode
-  onClick?: () => void
+  // onClick?: () => void
 }
 
-const Button: FC<ButtonProps & HTMLAttributes<HTMLInputElement>> = ({
+const Button: FC<ButtonProps> = ({
   text,
   style,
   icon,
-  onClick,
+  // onClick,
+  ...nativeButtonProps
 }) => {
   return (
-    <SimpleButton style={style} onClick={onClick}>
+    <SimpleButton style={style} {...nativeButtonProps}>
       {text}
       {icon}
     </SimpleButton>
